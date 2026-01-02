@@ -1,0 +1,162 @@
+/* ===== SOFT PROFESSIONAL THEME ===== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.stApp {
+    background: linear-gradient(135deg, #f8faf8 0%, #f0f4f0 100%);
+    font-family: 'Inter', sans-serif;
+}
+
+/* ===== SIDEBAR ===== */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #2d4a3e 0%, #1e3329 100%);
+    border-right: 1px solid #3d5a4e;
+}
+
+section[data-testid="stSidebar"] .stMarkdown {
+    color: #e8f0eb;
+}
+
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3 {
+    color: #ffffff;
+}
+
+section[data-testid="stSidebar"] .stCaption {
+    color: #a8c4b5;
+}
+
+/* ===== BUTTONS ===== */
+.stButton > button {
+    background: linear-gradient(135deg, #4a7c59 0%, #3d6b4a 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(74, 124, 89, 0.3);
+}
+
+.stButton > button:hover {
+    background: linear-gradient(135deg, #5a8c69 0%, #4d7b5a 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 124, 89, 0.4);
+}
+
+/* ===== CHAT MESSAGES ===== */
+.stChatMessage[data-testid="chat-message-user"] {
+    background: linear-gradient(135deg, #e8f5e9 0%, #dcedc8 100%);
+    border-radius: 16px;
+    border: 1px solid #c8e6c9;
+    padding: 16px;
+    margin: 8px 0;
+}
+
+.stChatMessage[data-testid="chat-message-assistant"] {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e0e0e0;
+    padding: 16px;
+    margin: 8px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* ===== CHAT INPUT ===== */
+.stChatInput > div {
+    border-radius: 25px;
+    border: 2px solid #c8e6c9;
+    background: #ffffff;
+    box-shadow: 0 2px 12px rgba(74, 124, 89, 0.1);
+}
+
+.stChatInput > div:focus-within {
+    border-color: #4a7c59;
+    box-shadow: 0 4px 16px rgba(74, 124, 89, 0.2);
+}
+
+/* ===== FILE UPLOADER ===== */
+.stFileUploader {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 16px;
+    border: 2px dashed #5a8c69;
+}
+
+.stFileUploader:hover {
+    border-color: #7cb68a;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* ===== WELCOME CARD ===== */
+.welcome-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e8f5e9;
+    margin: 20px 0;
+}
+
+.welcome-card h2 {
+    color: #2d4a3e;
+    font-size: 28px;
+    margin-bottom: 16px;
+}
+
+.welcome-card p {
+    color: #5a7a6a;
+    font-size: 16px;
+}
+
+/* ===== STATS CARD ===== */
+.stats-card {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 8px 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ===== DIVIDER ===== */
+hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #5a8c69, transparent);
+    margin: 20px 0;
+}
+
+/* ===== SELECT BOX ===== */
+.stSelectbox > div > div {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    border: 1px solid #5a8c69;
+}
+
+/* ===== SUCCESS/INFO MESSAGES ===== */
+.stSuccess {
+    background: #e8f5e9;
+    border-left: 4px solid #4a7c59;
+    border-radius: 8px;
+}
+
+.stInfo {
+    background: #e3f2fd;
+    border-left: 4px solid #1976d2;
+    border-radius: 8px;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f0f4f0;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4a7c59;
+    border-radius: 4px;
+}
