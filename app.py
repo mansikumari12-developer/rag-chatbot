@@ -8,7 +8,7 @@ import os
 from dotenv import load_dotenv
 import warnings
 
-# ===================== WARNINGS (SUPPRESS TORCH NOISE) =====================
+# ===================== WARNINGS =====================
 warnings.filterwarnings("ignore")
 
 # ===================== LOAD ENV =====================
@@ -32,31 +32,35 @@ if os.path.exists("styles.css"):
 def load_embedder():
     return SentenceTransformer("all-MiniLM-L6-v2")
 
-# ===================== CHROMA DB (IN-MEMORY SAFE) ====================
+embedder = load_embedder()
+
+# ===================== CHROMA DB (IN-MEMORY) ====================
 @st.cache_resource
 def get_collection():
-    # In-memory ChromaDB (no SQLite persistence)
     client = chromadb.Client(
         Settings(
-            is_persistent=False,
+            is_persistent=False,        # fully in-memory (no SQLite)
             anonymized_telemetry=False
         )
     )
-    collection = client.get_or_create_collection(name="recipes")
+
+    # Manual collection creation (safe for Streamlit Cloud)
+    try:
+        collection = client.get_collection("recipes")
+    except:
+        collection = client.create_collection(name="recipes")
     return collection
 
 collection = get_collection()
-embedder = load_embedder()
 
-# ===================== LOAD DATA (Optional) ====================
-# Replace this with your actual recipe dataset
-# Example format: [{"id": "1", "name": "Oatmeal", "text": "Oatmeal recipe..."}]
+# ===================== LOAD DATA ====================
+# Replace this with your full recipe dataset
 my_recipes_list = [
     {"id": "1", "name": "Oatmeal Breakfast", "text": "Oatmeal with fruits and nuts. Serving size: 1 bowl. Calories: 250 kcal."},
     {"id": "2", "name": "Grilled Chicken Salad", "text": "Grilled chicken with mixed greens. Serving size: 1 plate. Calories: 350 kcal."}
 ]
 
-# Load data into collection if empty
+# Populate collection if empty
 if collection.count() == 0:
     for doc in my_recipes_list:
         collection.add(
