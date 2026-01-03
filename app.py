@@ -32,24 +32,38 @@ if os.path.exists("styles.css"):
 def load_embedder():
     return SentenceTransformer("all-MiniLM-L6-v2")
 
-# ===================== CHROMA DB (CLOUD SAFE) ====================
+# ===================== CHROMA DB (IN-MEMORY SAFE) ====================
 @st.cache_resource
 def get_collection():
-    # Use /tmp folder on Streamlit Cloud (writable)
-    persist_dir = "/tmp/chroma_db"
-
+    # In-memory ChromaDB (no SQLite persistence)
     client = chromadb.Client(
         Settings(
-            persist_directory=persist_dir,
+            is_persistent=False,
             anonymized_telemetry=False
         )
     )
-
     collection = client.get_or_create_collection(name="recipes")
     return collection
 
 collection = get_collection()
 embedder = load_embedder()
+
+# ===================== LOAD DATA (Optional) ====================
+# Replace this with your actual recipe dataset
+# Example format: [{"id": "1", "name": "Oatmeal", "text": "Oatmeal recipe..."}]
+my_recipes_list = [
+    {"id": "1", "name": "Oatmeal Breakfast", "text": "Oatmeal with fruits and nuts. Serving size: 1 bowl. Calories: 250 kcal."},
+    {"id": "2", "name": "Grilled Chicken Salad", "text": "Grilled chicken with mixed greens. Serving size: 1 plate. Calories: 350 kcal."}
+]
+
+# Load data into collection if empty
+if collection.count() == 0:
+    for doc in my_recipes_list:
+        collection.add(
+            documents=[doc["text"]],
+            metadatas=[{"name": doc["name"]}],
+            ids=[doc["id"]]
+        )
 
 # ===================== LLM FUNCTION ====================
 def ask_nutrition_bot(question: str, context: str) -> str:
@@ -140,7 +154,7 @@ if "messages" not in st.session_state:
 
 # Welcome Screen
 if chunk_count == 0:
-    st.warning("⚠️ Knowledge base is empty. Please run `python setup_knowledge.py` first.")
+    st.warning("⚠️ Knowledge base is empty. Please ensure recipes are loaded.")
 elif len(st.session_state.messages) == 0:
     st.markdown(
         """
@@ -173,7 +187,7 @@ if prompt:
 
     with st.chat_message("assistant", avatar="🥗"):
         if chunk_count == 0:
-            response = "⚠️ Knowledge base is empty. Please run `python setup_knowledge.py` first."
+            response = "⚠️ Knowledge base is empty. Please ensure recipes are loaded."
         else:
             query_embedding = embedder.encode(prompt).tolist()
             results = collection.query(
