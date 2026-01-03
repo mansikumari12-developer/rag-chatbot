@@ -1,6 +1,7 @@
 # ===================== IMPORTS =====================
 import streamlit as st
 import chromadb
+from chromadb.config import Settings
 from sentence_transformers import SentenceTransformer
 import requests
 import os
@@ -31,17 +32,26 @@ if os.path.exists("styles.css"):
 def load_embedder():
     return SentenceTransformer("all-MiniLM-L6-v2")
 
-# ===================== CHROMA DB ====================
+# ===================== CHROMA DB (CLOUD SAFE) ====================
 @st.cache_resource
 def get_collection():
-    client = chromadb.PersistentClient(path="./chroma_db")
+    # Use /tmp folder on Streamlit Cloud (writable)
+    persist_dir = "/tmp/chroma_db"
+
+    client = chromadb.Client(
+        Settings(
+            persist_directory=persist_dir,
+            anonymized_telemetry=False
+        )
+    )
+
     collection = client.get_or_create_collection(name="recipes")
     return collection
 
 collection = get_collection()
 embedder = load_embedder()
 
-# ===================== LLM FUNCTION =================
+# ===================== LLM FUNCTION ====================
 def ask_nutrition_bot(question: str, context: str) -> str:
     system_prompt = f"""
 You are an English-only Recipe and Nutrition Chatbot.
@@ -57,8 +67,7 @@ STRICT RULES:
 7. For medical questions say:
    "This chatbot provides general nutrition information only. Please consult a healthcare professional for medical advice."
 
-CONTEXT FROM DATABASE:
-{context}
+CONTEXT FROM DATABASE: {context}
 
 FORMAT:
 - Use headings and bullet points
@@ -66,7 +75,6 @@ FORMAT:
 - Mention serving size
 - Be concise
 """
-
     response = requests.post(
         "https://api.groq.com/openai/v1/chat/completions",
         headers={
